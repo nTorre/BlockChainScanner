@@ -23,11 +23,10 @@ let bollingerBotToken = "6473366973:AAFAXkT1YJIrWNCFlCON6kTrHhvjXM0cWxc";
 
 async function bollingerSolana() {
 
-    await updateTokensData(Blockchain.Solana, '2H', 22, 100_000);
 
-    // await updateTokenList(Blockchain.Solana, 100_000).then(async ()=>{
-    //     await updateTokensData(Blockchain.Solana, '2H', 22, 100_000);
-    // });
+    await updateTokenList(Blockchain.Solana, 100_000).then(async ()=>{
+        await updateTokensData(Blockchain.Solana, '2H', 22, 100_000);
+    });
 
     await deleteFilesInDirectory('./assets/charts');
 
