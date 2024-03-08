@@ -45,12 +45,6 @@ export async function getTokens(chain: Blockchain, offset: number = 0): Promise<
 }
 
 export async function insertBETokenOHLCV(chain: Blockchain, address: string, candleTimeframe: CandleTimeframe, timeFrom: number, timeTo: number): Promise<TokenOHLCV> {
-    let result: TokenOHLCV = {
-        address: address,
-        type: candleTimeframe,
-        candles: []
-    }
-
     try {
         const headers: object = {
             'X-API-KEY': process.env.BIRDEYE_TOKEN,
@@ -62,7 +56,11 @@ export async function insertBETokenOHLCV(chain: Blockchain, address: string, can
             throw new Error("error downloading data");
         }
 
-        
+        let result: TokenOHLCV = {
+            address: address,
+            type: candleTimeframe,
+            candles: []
+        }
 
         response.data.data.items.forEach((candle: BECandle) => {
             let simpleCandle: SimpleCandle = {
@@ -78,7 +76,7 @@ export async function insertBETokenOHLCV(chain: Blockchain, address: string, can
 
         return result; // Si assume che response.data sia nel formato corretto
     } catch (error) {
-        return result; // Puoi lanciare un errore specifico se necessario
+        throw error; // Puoi lanciare un errore specifico se necessario
     }
 }
 

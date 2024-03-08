@@ -4,11 +4,22 @@ import { Blockchain, CandleTimeframe, TokenOHLCV } from "../types/customTypes";
 import { getFromByPeriods } from "../utils/dataUtils";
 import { getTokenList } from "./tokenInfoController";
 
+function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export async function insertTokenOHLCV(chain: Blockchain, address: string, candleTimeframe: CandleTimeframe, timeFrom: number, timeTo: number) {
     // dovrei controllare che non ci siano già i dati dentro il db (per evitare doppie richieste)
-    insertBETokenOHLCV(chain, address, candleTimeframe, timeFrom, timeTo).then((result: TokenOHLCV) => {
-        insertOrUpdateTokenData(result);
-    });
+    let error = true;
+    while (error) {
+        await insertBETokenOHLCV(chain, address, candleTimeframe, timeFrom, timeTo).then(async (result: TokenOHLCV) => {
+            error = false;
+            await insertOrUpdateTokenData(result);
+        }).catch(async (err) => {
+            error = true;
+            await sleep(1000);
+        });
+    }
 }
 
 export async function insertTokenOHLCVbyPeriods(chain: Blockchain, address: string, candleTimeframe: CandleTimeframe, periods: number) {
@@ -24,8 +35,8 @@ export async function getTokenOHLCV(chain: Blockchain, address: string, candleTi
 
     return retrieveTokenData(chain, address, candleTimeframe, periods).then((data: TokenOHLCV) => {
         return data;
-    }).catch( err =>{
-        throw(err);
+    }).catch(err => {
+        throw (err);
     });
 
 }
@@ -33,7 +44,7 @@ export async function getTokenOHLCV(chain: Blockchain, address: string, candleTi
 export async function updateTokensData(chain: Blockchain, candleTimeframe: CandleTimeframe, periods: number, minMc: number) {
     console.log("Ciao");
     let tokensList = await retireveTokensList(chain, minMc);
-    for (let i=0; i<tokensList.length; i++){
+    for (let i = 0; i < tokensList.length; i++) {
         let token = tokensList[i];
         await insertTokenOHLCVbyPeriods(chain, token.address, candleTimeframe, periods);
     }

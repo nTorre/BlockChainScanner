@@ -10,7 +10,7 @@ export async function testChecker(bot: object, chain: Blockchain, minMc: number,
         let token = tokens[j];
         let tokenData = await getTokenOHLCV(chain, token.address, timeFrame, periods);
         if (tokenData.candles.length > 0 && await checker(tokenData)) {
-            await sendSignal(bot, tokenData, token);
+            await sendSignal(bot, tokenData, token, chain);
             await sleep(1500);
             i++;
         }

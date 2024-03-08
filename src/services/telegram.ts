@@ -1,11 +1,11 @@
-import { Token, TokenOHLCV } from "../types/customTypes";
+import { Blockchain, Token, TokenOHLCV } from "../types/customTypes";
 import { genChart } from '../services/chart';
 
 export var ids: number[] = [];
 
-export async function sendSignal(bot: any, tokenData: TokenOHLCV, token: Token){
+export async function sendSignal(bot: any, tokenData: TokenOHLCV, token: Token, chain: Blockchain){
     const markdownMessage = `
-⛓ Chain: *${token.chain}*
+⛓ Chain: *${chain}*
 💵 Pair detected: *${token.symbol}/USD*
 📊 Address: \`${token.address}\`
 

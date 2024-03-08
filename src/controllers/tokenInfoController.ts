@@ -26,7 +26,7 @@ export async function updateTokenList(chain: Blockchain, minMc: number): Promise
                 }
             }
 
-            console.log('Offset: ', offset);
+            console.log("Offset:", offset);
             offset+=50;
 
         } catch (error) {

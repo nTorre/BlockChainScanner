@@ -23,9 +23,11 @@ let bollingerBotToken = "6473366973:AAFAXkT1YJIrWNCFlCON6kTrHhvjXM0cWxc";
 
 async function bollingerSolana() {
 
-    await updateTokenList(Blockchain.Solana, 100_000).then(async ()=>{
-        await updateTokensData(Blockchain.Solana, '2H', 22, 100_000);
-    });
+    await updateTokensData(Blockchain.Solana, '2H', 22, 100_000);
+
+    // await updateTokenList(Blockchain.Solana, 100_000).then(async ()=>{
+    //     await updateTokensData(Blockchain.Solana, '2H', 22, 100_000);
+    // });
 
     await deleteFilesInDirectory('./assets/charts');
 
@@ -34,20 +36,6 @@ async function bollingerSolana() {
 
 
 
-async function bollingerBase() {
-
-    await updateTokenList(Blockchain.Base, 100_000).then(async ()=>{
-        await updateTokensData(Blockchain.Base, '2H', 22, 100_000);
-    });
-
-    await deleteFilesInDirectory('./assets/charts');
-
-    let bollingerBotToken = "7084829241:AAH2HKEPmMfJtXCIHj4faFZv51i0jC7Ybsg";
-    const bollingerBot = new TelegramBot(bollingerBotToken, { polling: true });
-    
-    await testChecker(bollingerBot, Blockchain.Base, 800_000, 21, '2H', bollingerBadsChecker);
-}
-
 
 cron.schedule('0 * * * *', async () => {
     const oraCorrente = moment().hour();
@@ -55,4 +43,7 @@ cron.schedule('0 * * * *', async () => {
         bollingerSolana();
     }
 });
+
+bollingerSolana();
+
 
