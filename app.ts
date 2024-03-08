@@ -4,7 +4,8 @@ import { updateTokenList } from './src/controllers/tokenInfoController';
 import { bollingerBadsChecker } from './src/indicators/bollingerBands';
 import { deleteFilesInDirectory } from './src/services/chart';
 import TelegramBot, { Message } from 'node-telegram-bot-api';
-
+const cron = require('node-cron');
+const moment = require('moment');
 // Setup data downloader
 
 import { Blockchain, TokenOHLCV } from "./src/types/customTypes";
@@ -47,5 +48,11 @@ async function bollingerBase() {
     await testChecker(bollingerBot, Blockchain.Base, 800_000, 21, '2H', bollingerBadsChecker);
 }
 
-bollingerSolana();
+
+cron.schedule('0 * * * *', async () => {
+    const oraCorrente = moment().hour();
+    if (oraCorrente % 2 === 0) {
+        bollingerSolana();
+    }
+});
 
